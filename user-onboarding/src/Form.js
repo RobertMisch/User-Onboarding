@@ -55,9 +55,26 @@ function Form(){
 	  }, [myForm]);
 
     //validateChange
-    const validateChange= function(){
-
-    }
+    const validateChange = e => {
+	    // Reach will allow us to "reach" into the schema and test only one part.
+	    yup
+	      .reach(formSchema, e.target.name)
+          //.validate(e.target.value) <=what cristina had, another student found a bug in this and supplied fix
+          .validate(e.target.name === "terms" ? e.target.checked : e.target.value)
+	      .then(valid => {
+              console.log(`this is what valid is in validateChange ${valid}`);
+	        setMyErrors({
+	          ...myErrors,
+	          [e.target.name]: ""
+	        });
+	      })
+	      .catch(err => {
+	        setMyErrors({
+	          ...myErrors,
+	          [e.target.name]: err.myErrors[0]
+	        });
+	      });
+	  };
 
     //formSubmit
     const formSubmit= function(){

@@ -11,7 +11,8 @@ const formSchema = yup.object().shape({
     name: yup.string().required('name is required'),
     email: yup.string().required('email is required'),
     password: yup.string().required('password is required'),
-    terms: yup.boolean().oneOf([true], 'must agree to TOS')
+    terms: yup.boolean().oneOf([true], 'must agree to TOS'),
+    random: yup.string()
 })
 
 function Form(){
@@ -21,7 +22,8 @@ function Form(){
             name:'',
             email:'',
             password:'',
-            terms:''
+            terms:'',
+            random:'',
         })
 
         //state for errors
@@ -29,7 +31,8 @@ function Form(){
             name:'',
             email:'',
             password:'',
-            terms:''
+            terms:'',
+            random:'',
         })
 
         //state for button (only pressable when the form is complete)
@@ -91,7 +94,8 @@ function Form(){
 	          name: "",
 	          email: "",
 	          terms: "",
-              password:"",
+            password:"",
+            random:"",
 	        });
 	      })
 	      .catch(err => {
@@ -164,6 +168,15 @@ function Form(){
                 onChange={inputChange}
                 />
                 {myErrors.terms.length > 0 ? <p className="error">{myErrors.terms}</p> : null}
+            </label>
+            <label htmlFor="random">
+              pick an option
+              <select id="random" name="random" onChange={inputChange}>
+                  <option value="one">1</option>
+                  <option value="two">2</option>
+                  <option value="three">3</option>
+                  <option value="four">4</option>
+              </select>
             </label>
             <pre>{JSON.stringify(users, null, 2)}</pre>
             <button type='submit' disabled={buttonDisabled}>Submit</button>

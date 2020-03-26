@@ -65,7 +65,7 @@ function Form(){
         //   .validate(e.target.value) //<=what cristina had, another student found a bug in this and supplied fix
           .validate(e.target.name === "terms" ? e.target.checked : e.target.value)
 	      .then(valid => {
-              console.log(`this is what valid is in validateChange: ${valid}`);
+              console.log(`this is what valid is in validateChange: ${myErrors} ${e.target.name}`);
 	        setMyErrors({
 	          ...myErrors,
 	          [e.target.name]: ""

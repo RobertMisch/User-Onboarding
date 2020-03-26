@@ -36,7 +36,7 @@ function Form(){
         const [buttonDisabled, setButtonDisabled]= useState(true)
 
         //state for post request
-        const [post, setPost] = useState([])
+        const [users, setUsers] = useState([])
 
     //VALIDATION STEPS
     //use effect
@@ -59,10 +59,10 @@ function Form(){
 	    // Reach will allow us to "reach" into the schema and test only one part.
 	    yup
 	      .reach(formSchema, e.target.name)
-          //.validate(e.target.value) <=what cristina had, another student found a bug in this and supplied fix
+        //   .validate(e.target.value) //<=what cristina had, another student found a bug in this and supplied fix
           .validate(e.target.name === "terms" ? e.target.checked : e.target.value)
 	      .then(valid => {
-              console.log(`this is what valid is in validateChange ${valid}`);
+              console.log(`this is what valid is in validateChange: ${valid}`);
 	        setMyErrors({
 	          ...myErrors,
 	          [e.target.name]: ""
@@ -71,15 +71,33 @@ function Form(){
 	      .catch(err => {
 	        setMyErrors({
 	          ...myErrors,
-	          [e.target.name]: err.myErrors[0]
-	        });
+	          [e.target.name]: err.errors[0]
+            });
+            console.log(err)
 	      });
 	  };
 
     //formSubmit
-    const formSubmit= function(){
+    const formSubmit = e => {
+        e.preventDefault();
+        console.log(e)
+	    axios
+	      .post("https://reqres.in/api/users", myForm)
+	      .then(res => {
+	        setUsers(res.data);
+	        console.log("success", users);
 
-    }
+	        setMyForm({
+	          name: "",
+	          email: "",
+	          terms: "",
+              password:"",
+	        });
+	      })
+	      .catch(err => {
+	        console.log(err.res);
+	      });
+	  };
 
     //inputChange
     const inputChange = function(e){
@@ -97,7 +115,7 @@ function Form(){
       //and also add on the key value pair of e.target.name : e.target.checked/value
     }
 
-
+    console.log(myErrors)
     return(
     <div>
         <form onSubmit={formSubmit}>
@@ -145,9 +163,11 @@ function Form(){
                 checked={myForm.terms}
                 onChange={inputChange}
                 />
+                {myErrors.terms.length > 0 ? <p className="error">{myErrors.terms}</p> : null}
             </label>
+            <pre>{JSON.stringify(users, null, 2)}</pre>
+            <button type='submit' disabled={buttonDisabled}>Submit</button>
         </form>
-        <button disabled={buttonDisabled}>Submit</button>
     </div>
     )
 }
